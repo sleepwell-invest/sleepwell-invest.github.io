@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17243c">
+  <title>退休現金流試算｜睡得著的投資</title>
+  <meta name="description" content="快速估算退休後每月現金流缺口、退休準備金，以及現在每月需要準備多少。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="回到頁首">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>睡得著的投資</span>
+    </a>
+    <span class="mini">退休現金流試算</span>
+  </header>
+
+  <main id="top">
+    <section class="intro wrap">
+      <p class="eyebrow">RETIREMENT CASH FLOW</p>
+      <h1>你以為收入夠高，<br><em>就能安心退休？</em></h1>
+      <p class="lede">真正要看的，不是現在賺多少，<br class="mobile-break">而是退休後每個月還差多少。</p>
+      <div class="privacy-note"><span aria-hidden="true">✓</span> 所有資料只在你的裝置上計算，不會上傳或留存</div>
+    </section>
+
+    <section class="calculator wrap" aria-labelledby="form-title">
+      <div class="section-heading">
+        <span>01</span>
+        <div><h2 id="form-title">先填入你的退休藍圖</h2><p>約 1 分鐘，金額皆以新台幣計算</p></div>
+      </div>
+
+      <form id="retirementForm" novalidate>
+        <div class="form-grid three">
+          <label>現在年齡<div class="input-wrap"><input id="currentAge" type="number" inputmode="numeric" min="18" max="79" value="40" required><span>歲</span></div></label>
+          <label>預計退休年齡<div class="input-wrap"><input id="retireAge" type="number" inputmode="numeric" min="40" max="85" value="60" required><span>歲</span></div></label>
+          <label>規劃到幾歲<div class="input-wrap"><input id="planAge" type="number" inputmode="numeric" min="61" max="110" value="90" required><span>歲</span></div></label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="form-grid two">
+          <label>希望退休後每月生活費<small>用今天的生活水準估算</small><div class="input-wrap money"><b>NT$</b><input id="monthlyExpense" type="text" inputmode="numeric" value="80,000" required><span>元</span></div></label>
+          <label>退休後每月穩定收入<small>填退休當時預估的勞保、勞退、租金、年金合計</small><div class="input-wrap money"><b>NT$</b><input id="monthlyIncome" type="text" inputmode="numeric" value="30,000" required><span>元</span></div></label>
+          <label>目前已準備的退休資產<small>專門留給退休的存款、投資與保單價值</small><div class="input-wrap money"><b>NT$</b><input id="currentAssets" type="text" inputmode="numeric" value="1,000,000" required><span>元</span></div></label>
+        </div>
+
+        <details>
+          <summary>調整進階假設 <span>通膨與報酬率</span></summary>
+          <div class="form-grid three advanced">
+            <label>每年通膨率<div class="input-wrap"><input id="inflation" type="number" inputmode="decimal" min="0" max="10" step="0.1" value="2"><span>%</span></div></label>
+            <label>退休前年化報酬<div class="input-wrap"><input id="preReturn" type="number" inputmode="decimal" min="0" max="15" step="0.1" value="4"><span>%</span></div></label>
+            <label>退休後年化報酬<div class="input-wrap"><input id="postReturn" type="number" inputmode="decimal" min="0" max="15" step="0.1" value="3"><span>%</span></div></label>
+          </div>
+          <p class="assumption">預設值僅供試算，不代表未來保證報酬。</p>
+        </details>
+
+        <p id="error" class="error" role="alert"></p>
+        <button class="primary" type="submit">查看我的退休現金流 <span>→</span></button>
+      </form>
+    </section>
+
+    <section id="results" class="results wrap" aria-live="polite" hidden>
+      <div class="section-heading light">
+        <span>02</span>
+        <div><h2>你的退休現金流輪廓</h2><p id="timelineText"></p></div>
+      </div>
+
+      <div class="hero-result">
+        <p>退休第一年，每月現金流缺口約</p>
+        <strong id="monthlyGap">NT$ 0</strong>
+        <small id="gapExplain"></small>
+        <div class="bar" aria-hidden="true"><i id="incomeBar"></i></div>
+        <div class="bar-labels"><span>穩定收入可支應 <b id="coverage">0%</b></span><span>缺口 <b id="gapPercent">0%</b></span></div>
+      </div>
+
+      <div class="result-grid">
+        <article><span>退休時預估月生活費</span><b id="futureExpense">NT$ 0</b><small>已計入退休前通膨</small></article>
+        <article><span>退休時需要的準備金</span><b id="capitalNeed">NT$ 0</b><small>支應整段退休生活的估算</small></article>
+        <article><span>目前資產退休時預估值</span><b id="futureAssets">NT$ 0</b><small>依退休前報酬率推估</small></article>
+      </div>
+
+      <div class="action-card">
+        <p>從現在開始，你每月約需準備</p>
+        <strong id="monthlySaving">NT$ 0</strong>
+        <div class="shortfall">退休準備金仍差 <b id="shortfall">NT$ 0</b></div>
+        <p id="statusMessage" class="status-message"></p>
+      </div>
+
+      <div class="result-actions">
+        <button id="copyResult" class="secondary" type="button">複製試算結果</button>
+        <button id="recalculate" class="text-button" type="button">修改數字再試算</button>
+      </div>
+
+      <div class="cta">
+        <p>數字不是要讓你焦慮，<br>而是讓下一步變得更清楚。</p>
+        <strong>想把勞保、勞退、保單與投資一起納入？</strong>
+        <span>截圖或複製結果，回到 IG 留言「退休」</span>
+      </div>
+    </section>
+
+    <section class="method wrap">
+      <h2>這份試算怎麼算？</h2>
+      <div class="steps">
+        <div><b>1</b><p><strong>估算退休支出</strong><span>把今天的生活費換算成退休當時的金額</span></p></div>
+        <div><b>2</b><p><strong>找出每月缺口</strong><span>扣除勞保、勞退、租金等穩定收入</span></p></div>
+        <div><b>3</b><p><strong>回推現在要準備多少</strong><span>依期間與假設報酬率估算每月準備額</span></p></div>
+      </div>
+      <p class="disclaimer">本工具為教育用途的概略試算，不構成投資、保險或退休規劃建議。實際結果會受市場報酬、通膨、稅務、費用、給付規定及個人狀況影響；勞保與勞退金額請以主管機關核定為準。</p>
+      <div class="official-links"><a href="https://www.bli.gov.tw/0109187.html" target="_blank" rel="noopener">勞保局整合試算 →</a></div>
+    </section>
+  </main>
+
+  <footer><span>睡得著的投資</span><small>先看懂現金流，再做適合自己的選擇。</small></footer>
+  <script src="app.js"></script>
+</body>
+</html>
