@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#17243c">
-  <title>退休現金流試算｜睡得著的投資</title>
-  <meta name="description" content="快速估算退休後每月現金流缺口、退休準備金，以及現在每月需要準備多少。">
+  <title>退休現金流行動試算｜睡得著的投資</title>
+  <meta name="description" content="用今天的幣值，看懂退休後每月差多少，以及現在可以先完成的第一個目標。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="extras.css">
 </head>
 <body>
   <header class="topbar">
@@ -17,14 +18,14 @@
       <span class="brand-mark" aria-hidden="true"></span>
       <span>睡得著的投資</span>
     </a>
-    <span class="mini">退休現金流試算</span>
+      <span class="mini">退休現金流行動試算</span>
   </header>
 
   <main id="top">
     <section class="intro wrap">
       <p class="eyebrow">RETIREMENT CASH FLOW</p>
       <h1>你以為收入夠高，<br><em>就能安心退休？</em></h1>
-      <p class="lede">真正要看的，不是現在賺多少，<br class="mobile-break">而是退休後每個月還差多少。</p>
+      <p class="lede">先不用被上千萬嚇到。<br class="mobile-break">從退休後每個月還差多少開始看。</p>
       <div class="privacy-note"><span aria-hidden="true">✓</span> 所有資料只在你的裝置上計算，不會上傳或留存</div>
     </section>
 
@@ -44,7 +45,7 @@
         <div class="divider"></div>
         <div class="form-grid two">
           <label>希望退休後每月生活費<small>用今天的生活水準估算</small><div class="input-wrap money"><b>NT$</b><input id="monthlyExpense" type="text" inputmode="numeric" value="80,000" required><span>元</span></div></label>
-          <label>退休後每月穩定收入<small>填退休當時預估的勞保、勞退、租金、年金合計</small><div class="input-wrap money"><b>NT$</b><input id="monthlyIncome" type="text" inputmode="numeric" value="30,000" required><span>元</span></div></label>
+          <label>退休後每月穩定收入<small>勞保、勞退、租金、年金等，以今天幣值估算</small><div class="input-wrap money"><b>NT$</b><input id="monthlyIncome" type="text" inputmode="numeric" value="30,000" required><span>元</span></div><span class="unknown-toggle"><input id="incomeUnknown" type="checkbox"> 不確定，先用保守值 20,000 元試算</span></label>
           <label>目前已準備的退休資產<small>專門留給退休的存款、投資與保單價值</small><div class="input-wrap money"><b>NT$</b><input id="currentAssets" type="text" inputmode="numeric" value="1,000,000" required><span>元</span></div></label>
         </div>
 
@@ -55,7 +56,7 @@
             <label>退休前年化報酬<div class="input-wrap"><input id="preReturn" type="number" inputmode="decimal" min="0" max="15" step="0.1" value="4"><span>%</span></div></label>
             <label>退休後年化報酬<div class="input-wrap"><input id="postReturn" type="number" inputmode="decimal" min="0" max="15" step="0.1" value="3"><span>%</span></div></label>
           </div>
-          <p class="assumption">預設值僅供試算，不代表未來保證報酬。</p>
+          <p class="assumption">系統會把通膨與報酬率換算成實質購買力。預設值僅供試算，不代表未來保證報酬。</p>
         </details>
 
         <p id="error" class="error" role="alert"></p>
@@ -70,7 +71,7 @@
       </div>
 
       <div class="hero-result">
-        <p>退休第一年，每月現金流缺口約</p>
+        <p>以今天的生活水準，退休後每月約差</p>
         <strong id="monthlyGap">NT$ 0</strong>
         <small id="gapExplain"></small>
         <div class="bar" aria-hidden="true"><i id="incomeBar"></i></div>
@@ -78,17 +79,35 @@
       </div>
 
       <div class="result-grid">
-        <article><span>退休時預估月生活費</span><b id="futureExpense">NT$ 0</b><small>已計入退休前通膨</small></article>
-        <article><span>退休時需要的準備金</span><b id="capitalNeed">NT$ 0</b><small>支應整段退休生活的估算</small></article>
-        <article><span>目前資產退休時預估值</span><b id="futureAssets">NT$ 0</b><small>依退休前報酬率推估</small></article>
+        <article><span>距離退休</span><b id="resultPreYears">0 年</b><small>還有時間分階段準備</small></article>
+        <article><span>預計退休生活</span><b id="resultRetYears">0 年</b><small>從退休年齡規劃到目標年齡</small></article>
+        <article><span>穩定收入可支應</span><b id="coverageCard">0%</b><small>其餘就是要補上的月現金流</small></article>
       </div>
 
       <div class="action-card">
-        <p>從現在開始，你每月約需準備</p>
-        <strong id="monthlySaving">NT$ 0</strong>
-        <div class="shortfall">退休準備金仍差 <b id="shortfall">NT$ 0</b></div>
+        <p>先不用一次補完，現在可以從每月準備</p>
+        <strong id="stageMonthly">NT$ 0</strong>
         <p id="statusMessage" class="status-message"></p>
       </div>
+
+      <div class="first-stage">
+        <span class="stage-tag">先做第一階段</span>
+        <p>第一個退休準備目標</p>
+        <strong id="stageCapital">NT$ 0</strong>
+        <div class="stage-line"><span>未來約可支應每月</span><b id="stageIncome">NT$ 0</b></div>
+        <small id="stageExplain">先完成一小段，比一次看完整個退休更容易開始。</small>
+      </div>
+
+      <details class="full-breakdown">
+        <summary>查看完整退休準備金估算 <span>進階結果</span></summary>
+        <div class="full-grid">
+          <div><span>一次補足，現在每月需準備</span><b id="monthlySaving">NT$ 0</b></div>
+          <div><span>完整退休準備金需求</span><b id="capitalNeed">NT$ 0</b></div>
+          <div><span>目前資產退休時的購買力</span><b id="futureAssets">NT$ 0</b></div>
+          <div><span>仍需補足的準備金</span><b id="shortfall">NT$ 0</b></div>
+        </div>
+        <small>以上皆以今天幣值呈現，方便你和現在的收入與生活費比較。</small>
+      </details>
 
       <div class="result-actions">
         <button id="copyResult" class="secondary" type="button">複製試算結果</button>
@@ -105,9 +124,9 @@
     <section class="method wrap">
       <h2>這份試算怎麼算？</h2>
       <div class="steps">
-        <div><b>1</b><p><strong>估算退休支出</strong><span>把今天的生活費換算成退休當時的金額</span></p></div>
+        <div><b>1</b><p><strong>估算退休支出</strong><span>用今天的幣值設定想要的退休生活</span></p></div>
         <div><b>2</b><p><strong>找出每月缺口</strong><span>扣除勞保、勞退、租金等穩定收入</span></p></div>
-        <div><b>3</b><p><strong>回推現在要準備多少</strong><span>依期間與假設報酬率估算每月準備額</span></p></div>
+        <div><b>3</b><p><strong>拆成可以開始的目標</strong><span>先完成第一階段，再逐步補足全部缺口</span></p></div>
       </div>
       <p class="disclaimer">本工具為教育用途的概略試算，不構成投資、保險或退休規劃建議。實際結果會受市場報酬、通膨、稅務、費用、給付規定及個人狀況影響；勞保與勞退金額請以主管機關核定為準。</p>
       <div class="official-links"><a href="https://www.bli.gov.tw/0109187.html" target="_blank" rel="noopener">勞保局整合試算 →</a></div>
