@@ -46,7 +46,7 @@
         <div class="form-grid two">
           <label>希望退休後每月生活費<small>用今天的生活水準估算</small><div class="input-wrap money"><b>NT$</b><input id="monthlyExpense" type="text" inputmode="numeric" value="80,000" required><span>元</span></div></label>
           <label>退休後每月穩定收入<small>勞保、勞退、租金、年金等，以今天幣值估算</small><div class="input-wrap money"><b>NT$</b><input id="monthlyIncome" type="text" inputmode="numeric" value="30,000" required><span>元</span></div><span class="unknown-toggle"><input id="incomeUnknown" type="checkbox"> 不確定，先用保守值 20,000 元試算</span></label>
-          <label>目前已準備的退休資產<small>專門留給退休的存款、投資與保單價值</small><div class="input-wrap money"><b>NT$</b><input id="currentAssets" type="text" inputmode="numeric" value="1,000,000" required><span>元</span></div></label>
+          <label>目前已準備的退休資產<small>專門留給退休的存款、投資與保單價值</small><div class="input-wrap money"><b>NT$</b><input id="currentAssets" type="text" inputmode="numeric" value="" placeholder="尚未準備可填 0"><span>元</span></div></label>
         </div>
 
         <details>
@@ -92,7 +92,7 @@
 
       <div class="first-stage">
         <span class="stage-tag">先做第一階段</span>
-        <p>第一個退休準備目標</p>
+        <p>依你目前資產，下一階段目標</p>
         <strong id="stageCapital">NT$ 0</strong>
         <div class="stage-line"><span>未來約可支應每月</span><b id="stageIncome">NT$ 0</b></div>
         <small id="stageExplain">先完成一小段，比一次看完整個退休更容易開始。</small>
@@ -134,6 +134,6 @@
   </main>
 
   <footer><span>睡得著的投資</span><small>先看懂現金流，再做適合自己的選擇。</small></footer>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
