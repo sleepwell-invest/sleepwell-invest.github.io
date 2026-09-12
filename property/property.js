@@ -40,6 +40,8 @@ function calculate(){
   document.querySelector('#loanAssumption').textContent=`增貸利率 ${loanRate}%`;
 
   const impact=document.querySelector('#mortgageImpact');
+  const surplusHighlight=document.querySelector('#surplusHighlight');
+  const surplusMessage=document.querySelector('#surplusMessage');
   if(monthlyMortgage>0){
     impact.hidden=false;
     document.querySelector('#beforeBurden').textContent=money(monthlyMortgage);
@@ -47,9 +49,20 @@ function calculate(){
     document.querySelector('#coverageText').textContent=surplus>0?'房貸可完全分擔':`可分擔 ${Math.round(coverage)}%`;
     document.querySelector('#coverageBar').style.width=coverage+'%';
     document.querySelector('#afterLabel').textContent=surplus>0?'房貸分擔後仍有剩餘':'每月仍需由薪水負擔';
-    document.querySelector('#surplusMessage').textContent=surplus>0?`分擔房貸後，每月試算仍有約 ${money(surplus)} 可運用。`:`每月新的現金流，試算可替薪水分擔約 ${money(Math.min(net,monthlyMortgage))} 房貸。`;
+    if(surplus>0){
+      impact.classList.add('has-surplus');
+      surplusHighlight.hidden=false;
+      document.querySelector('#surplusAmount').textContent=money(surplus);
+      surplusMessage.textContent='';
+    }else{
+      impact.classList.remove('has-surplus');
+      surplusHighlight.hidden=true;
+      surplusMessage.textContent=`每月新的現金流，試算可替薪水分擔約 ${money(Math.min(net,monthlyMortgage))} 房貸。`;
+    }
   }else{
     impact.hidden=true;
+    impact.classList.remove('has-surplus');
+    surplusHighlight.hidden=true;
   }
 
   if(available<=0){
