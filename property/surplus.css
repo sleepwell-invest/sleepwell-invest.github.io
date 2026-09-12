@@ -1,0 +1,57 @@
+.surplus-highlight {
+  margin-top: 18px;
+  background: var(--navy);
+  color: white;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.surplus-highlight[hidden] {
+  display: none;
+}
+
+.surplus-highlight::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 1px solid rgba(216, 194, 141, .22);
+  border-radius: 50%;
+  right: -36px;
+  top: -42px;
+}
+
+.surplus-highlight span,
+.surplus-highlight small {
+  display: block;
+}
+
+.surplus-highlight span {
+  font-size: 12px;
+  color: #c7ced9;
+}
+
+.surplus-highlight strong {
+  display: block;
+  font-size: clamp(34px, 8vw, 48px);
+  line-height: 1.2;
+  color: var(--gold2);
+  letter-spacing: -.04em;
+  margin: 6px 0;
+}
+
+.surplus-highlight small {
+  font-size: 11px;
+  color: #aeb7c5;
+}
+
+.impact-card.has-surplus .progress {
+  background: #e1eadf;
+}
+
+.impact-card.has-surplus .progress i {
+  background: var(--green);
+}
