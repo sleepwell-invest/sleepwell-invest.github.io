@@ -66,3 +66,4 @@
 .full-grid span { font-size: 11px; color: #aeb7c5; }
 .full-grid b { font-size: 14px; }
 .full-breakdown > small { display: block; color: #8f9aab; font-size: 10px; line-height: 1.6; margin-top: 10px; }
+.tool-link { color: var(--navy); text-decoration: none; font-weight: 700; }
