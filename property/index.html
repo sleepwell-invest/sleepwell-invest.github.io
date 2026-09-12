@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="property.css?v=1">
+  <link rel="stylesheet" href="surplus.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -99,6 +100,11 @@
           <div class="after"><span>活化後</span><b id="afterBurden">NT$ 0</b><small id="afterLabel">每月仍需由薪水負擔</small></div>
         </div>
         <div class="progress" aria-hidden="true"><i id="coverageBar"></i></div>
+        <div id="surplusHighlight" class="surplus-highlight" hidden>
+          <span>房貸完全分擔後，每月試算仍有</span>
+          <strong id="surplusAmount">NT$ 0</strong>
+          <small>可以繼續運用</small>
+        </div>
         <p id="surplusMessage"></p>
       </div>
 
@@ -133,6 +139,6 @@
 
   <footer><span>睡得著的投資</span><small>先確認承擔得起，再讓資產開始工作。</small></footer>
   <script src="core.js?v=1"></script>
-  <script src="property.js?v=1"></script>
+  <script src="property.js?v=2"></script>
 </body>
 </html>
