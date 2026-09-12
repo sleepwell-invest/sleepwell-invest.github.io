@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17243c">
+  <title>房產活化現金流試算｜睡得著的投資</title>
+  <meta name="description" content="用房屋估值、房貸餘額與現金流假設，快速了解房產可能的資金運用空間與每月現金流。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="property.css?v=1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../" aria-label="回到退休現金流試算">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>睡得著的投資</span>
+    </a>
+    <nav aria-label="試算工具">
+      <a href="../">退休試算</a>
+      <a class="active" href="./" aria-current="page">房產活化</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="intro wrap">
+      <p class="eyebrow">PROPERTY CASH FLOW</p>
+      <h1>房子不只會增值，<br><em>也可能替你創造現金流。</em></h1>
+      <p class="lede">輸入房屋現況，用一分鐘看看：<br>你的房產可能有多少資金運用空間。</p>
+      <div class="privacy-note"><span aria-hidden="true">✓</span> 資料只在你的裝置上計算，不會上傳或留存</div>
+    </section>
+
+    <section class="calculator wrap" aria-labelledby="form-title">
+      <div class="section-heading">
+        <span>01</span>
+        <div><h2 id="form-title">先填入房屋現況</h2><p>不知道精確數字，也可以先填大概</p></div>
+      </div>
+
+      <form id="propertyForm" novalidate>
+        <div class="form-grid two">
+          <label>目前房屋估值<small>可先用附近成交行情或銀行初估</small><div class="input-wrap money"><b>NT$</b><input id="propertyValue" type="text" inputmode="numeric" value="15,000,000" required><span>元</span></div></label>
+          <label>目前房貸餘額<small>尚未還清的本金餘額</small><div class="input-wrap money"><b>NT$</b><input id="loanBalance" type="text" inputmode="numeric" value="7,000,000" required><span>元</span></div></label>
+          <label>目前每月房貸<small>選填，用來計算薪水負擔的變化</small><div class="input-wrap money"><b>NT$</b><input id="monthlyMortgage" type="text" inputmode="numeric" value="30,000" placeholder="不知道可留白"><span>元</span></div></label>
+          <label>預估核貸成數<small>預設80%，可依自己的情況調整</small><div class="input-wrap"><input id="ltv" type="number" inputmode="decimal" min="10" max="90" step="1" value="80" required><span>%</span></div></label>
+        </div>
+
+        <details>
+          <summary>調整進階假設 <span>利率與現金流</span></summary>
+          <div class="form-grid two advanced">
+            <label>增貸年利率<div class="input-wrap"><input id="loanRate" type="number" inputmode="decimal" min="0" max="20" step="0.1" value="3"><span>%</span></div></label>
+            <label>年化現金流假設<div class="input-wrap"><input id="cashflowRate" type="number" inputmode="decimal" min="0" max="20" step="0.1" value="8"><span>%</span></div></label>
+          </div>
+          <p class="assumption">預設值是本篇案例使用的概念假設，不代表銀行實際利率或未來投資報酬。</p>
+        </details>
+
+        <p id="error" class="error" role="alert"></p>
+        <button class="primary" type="submit">查看房產活化試算 <span>→</span></button>
+      </form>
+    </section>
+
+    <section id="results" class="results wrap" aria-live="polite" hidden>
+      <div class="section-heading light">
+        <span>02</span>
+        <div><h2>你的房產活化輪廓</h2><p id="resultFormula"></p></div>
+      </div>
+
+      <div class="hero-result">
+        <p>預估可運用的房屋資金空間</p>
+        <strong id="availableCapital">NT$ 0</strong>
+        <small>房屋估值 × 核貸成數 − 目前房貸餘額</small>
+      </div>
+
+      <div class="cashflow-grid">
+        <article>
+          <span>預估每月現金流</span>
+          <b id="grossCashflow">NT$ 0</b>
+          <small id="cashflowAssumption">年化現金流 8%</small>
+        </article>
+        <i aria-hidden="true">−</i>
+        <article>
+          <span>每月資金成本</span>
+          <b id="fundingCost">NT$ 0</b>
+          <small id="loanAssumption">增貸利率 3%</small>
+        </article>
+      </div>
+
+      <div class="net-card">
+        <p>扣除資金成本後，每月可能增加</p>
+        <strong id="netCashflow">NT$ 0</strong>
+        <span>新的現金流</span>
+      </div>
+
+      <div id="mortgageImpact" class="impact-card">
+        <div class="impact-title"><span>薪水負擔試算</span><b id="coverageText">可分擔 0%</b></div>
+        <div class="comparison">
+          <div><span>活化前</span><b id="beforeBurden">NT$ 0</b><small>每月由薪水負擔</small></div>
+          <i aria-hidden="true">→</i>
+          <div class="after"><span>活化後</span><b id="afterBurden">NT$ 0</b><small id="afterLabel">每月仍需由薪水負擔</small></div>
+        </div>
+        <div class="progress" aria-hidden="true"><i id="coverageBar"></i></div>
+        <p id="surplusMessage"></p>
+      </div>
+
+      <div class="result-actions">
+        <button id="copyResult" class="secondary" type="button">複製我的試算結果</button>
+        <button id="recalculate" class="text-button" type="button">修改數字再試算</button>
+      </div>
+
+      <div class="cta">
+        <p>這只是第一步試算，<br>真正的規劃要把貸款方式與風險一起放進來。</p>
+        <strong>截圖或複製結果，回到 IG 留言「活化」</strong>
+        <span>再一起看看這個方向是否適合你</span>
+      </div>
+    </section>
+
+    <section class="method wrap">
+      <h2>這份試算怎麼看？</h2>
+      <div class="steps">
+        <div><b>1</b><p><strong>估算資金空間</strong><span>依房屋估值、核貸成數與房貸餘額概算</span></p></div>
+        <div><b>2</b><p><strong>比較資金成本</strong><span>先扣除增貸資金本身的利息成本</span></p></div>
+        <div><b>3</b><p><strong>看薪水負擔變化</strong><span>把剩餘現金流拿來分擔原本房貸</span></p></div>
+      </div>
+
+      <div class="protect-note">
+        <strong>試算前請先知道</strong>
+        <p>本工具以「利息成本」進行簡化試算。若實際貸款方案需本息攤還，當期現金支出會較高；償還的本金則會降低貸款餘額。</p>
+      </div>
+
+      <p class="disclaimer">本工具僅供教育與概念試算，不代表銀行實際核貸結果，也不構成貸款、投資或保險建議。實際鑑價、核貸成數、利率、費用及還款方式依銀行與個人條件而定；投資報酬與配息並非保證，且可能涉及本金、匯率與市場波動風險。</p>
+    </section>
+  </main>
+
+  <footer><span>睡得著的投資</span><small>先確認承擔得起，再讓資產開始工作。</small></footer>
+  <script src="core.js?v=1"></script>
+  <script src="property.js?v=1"></script>
+</body>
+</html>
