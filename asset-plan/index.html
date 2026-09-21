@@ -116,6 +116,8 @@
 
     .note { margin-top: 18px; padding: 18px 4px 0; border-top: 1px solid rgba(244,240,232,.16); color: rgba(244,240,232,.64); font-size: .78rem; line-height: 1.75; }
     .note strong { color: var(--gold-soft); }
+    .other-tools { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; }
+    .other-tools a { color: var(--gold-soft); font-size: .84rem; font-weight: 700; text-decoration: none; border-bottom: 1px solid rgba(234,214,165,.45); }
 
     @media (max-width: 820px) {
       .shell { padding: 18px 14px 48px; }
@@ -223,6 +225,10 @@
     <footer class="note">
       <strong>這只是第一步試算。</strong><br />
       本工具以可運用資產扣除預備金及近期用途後，將剩餘資產假設分為10%大盤部位、90%配息配置，並以假設年化配息率8%換算。試算不代表投資報酬或配息保證，實際配置應依個人收支、保障、資金用途及風險承受度評估。
+      <nav class="other-tools" aria-label="其他試算工具">
+        <a href="../">退休準備試算</a>
+        <a href="../property/">房產活化試算</a>
+      </nav>
     </footer>
   </main>
 
