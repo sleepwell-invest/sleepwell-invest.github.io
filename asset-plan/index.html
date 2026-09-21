@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#17263a" />
+  <meta name="description" content="先保留安全感，再將可配置資產分成10%大盤部位與90%配息配置。" />
+  <title>資產任務試算｜睡得著的投資</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2317263a'/%3E%3Crect x='11' y='22' width='28' height='21' rx='8' fill='none' stroke='%23f4f0e8' stroke-width='4'/%3E%3Cpath d='M48 16c-10 2-14 14-8 23 5 7 15 5 19-3-10 2-16-11-11-20z' fill='%23c9a45f'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #17263a;
+      --navy-2: #22364d;
+      --navy-3: #314760;
+      --cream: #f4f0e8;
+      --paper: #fbf8f2;
+      --ink: #17263a;
+      --slate: #69747d;
+      --gold: #c9a45f;
+      --gold-soft: #ead6a5;
+      --sage: #7f8e86;
+      --line: #ded7ca;
+      --shadow: 0 18px 46px rgba(15, 28, 43, .12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--navy); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 92% 7%, rgba(201, 164, 95, .16), transparent 24rem),
+        linear-gradient(145deg, #132237 0%, #1d3046 55%, #14243a 100%);
+      color: var(--cream);
+      min-height: 100vh;
+    }
+    button, input, select { font: inherit; }
+    button { touch-action: manipulation; }
+
+    .shell { width: min(1120px, 100%); margin: 0 auto; padding: 22px 18px 64px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .08em; }
+    .brand-mark { width: 36px; height: 28px; position: relative; flex: 0 0 auto; }
+    .brand-mark::before { content: ""; position: absolute; left: 0; top: 5px; width: 23px; height: 16px; border: 2px solid var(--cream); border-radius: 7px; opacity: .9; }
+    .brand-mark::after { content: ""; position: absolute; right: 0; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); box-shadow: -6px 0 0 var(--navy); }
+    .privacy { font-size: .78rem; color: rgba(244,240,232,.64); }
+
+    .intro { margin: 30px 0 24px; }
+    .eyebrow { margin: 0 0 10px; color: var(--gold-soft); font-size: .82rem; font-weight: 800; letter-spacing: .16em; }
+    h1 { margin: 0; font-size: clamp(2rem, 8vw, 4.2rem); line-height: 1.08; letter-spacing: -.04em; }
+    .intro p { max-width: 690px; margin: 16px 0 0; color: rgba(244,240,232,.72); line-height: 1.75; font-size: 1rem; }
+    .formula { color: var(--gold-soft); font-weight: 700; }
+
+    .workspace { display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 20px; align-items: start; }
+    .panel { border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
+    .inputs { background: var(--paper); color: var(--ink); padding: 24px; }
+    .results { background: rgba(244, 240, 232, .98); color: var(--ink); padding: 24px; }
+    .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .panel-head h2 { margin: 0; font-size: 1.25rem; }
+    .step { color: #9a7540; font-size: .78rem; font-weight: 800; letter-spacing: .12em; }
+
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+    .label-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+    label { font-weight: 750; font-size: .94rem; }
+    .hint { color: var(--slate); font-size: .78rem; }
+    .money-input { display: grid; grid-template-columns: 1fr auto; align-items: center; background: white; border: 1px solid var(--line); border-radius: 14px; transition: .2s ease; }
+    .money-input:focus-within { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,164,95,.13); }
+    input[type="number"] { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: 14px 8px 14px 14px; color: var(--ink); font-size: 1.05rem; font-weight: 750; }
+    .unit { padding-right: 14px; color: var(--slate); font-size: .88rem; }
+    .months { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+    .month-btn { border: 1px solid var(--line); background: white; color: var(--ink); padding: 10px 2px; border-radius: 11px; cursor: pointer; font-weight: 750; }
+    .month-btn[aria-pressed="true"] { color: white; background: var(--navy); border-color: var(--navy); }
+
+    .allocation-visual { margin: 2px 0 20px; }
+    .bar { display: flex; width: 100%; height: 18px; border-radius: 99px; overflow: hidden; background: #e7e1d7; }
+    .bar > span { display: block; transition: width .35s ease; }
+    .bar-reserve { background: var(--sage); }
+    .bar-market { background: var(--gold); }
+    .bar-income { background: var(--navy); }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 10px; color: var(--slate); font-size: .78rem; }
+    .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--dot); }
+
+    .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .task-card { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 14px; min-height: 120px; }
+    .task-card strong { display: block; font-size: 1.22rem; margin-top: 12px; }
+    .task-card small { color: var(--slate); line-height: 1.5; }
+    .task-card .tag { color: #926e3d; font-size: .74rem; font-weight: 850; letter-spacing: .08em; }
+    .task-card.primary { background: var(--navy); color: white; border-color: var(--navy); }
+    .task-card.primary small { color: rgba(255,255,255,.66); }
+    .task-card.primary .tag { color: var(--gold-soft); }
+
+    .hero-result { background: linear-gradient(135deg, #cba963 0%, #e0c98f 100%); border-radius: 18px; padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+    .hero-result::after { content: ""; position: absolute; width: 150px; height: 150px; border: 1px solid rgba(23,38,58,.16); border-radius: 50%; right: -45px; top: -65px; }
+    .hero-result span { display: block; font-size: .82rem; }
+    .hero-result strong { display: block; font-size: clamp(2rem, 8vw, 3.6rem); line-height: 1.06; margin: 8px 0 4px; letter-spacing: -.04em; }
+    .hero-result small { color: rgba(23,38,58,.7); }
+
+    .coverage { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+    .coverage-top { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .coverage-top strong { font-size: 1.2rem; }
+    .progress { height: 10px; background: #e8e2d8; border-radius: 99px; overflow: hidden; margin-top: 12px; }
+    .progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--sage), var(--gold)); border-radius: inherit; transition: width .35s ease; }
+
+    .goal { background: #e9e4da; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .goal h3 { margin: 0 0 8px; font-size: 1rem; }
+    .goal p { margin: 0; color: #4f5c65; line-height: 1.7; }
+    .goal strong { color: var(--ink); }
+    .goal.done { background: #e2e9e4; }
+
+    .copy-btn { width: 100%; border: 0; border-radius: 14px; padding: 15px 18px; background: var(--navy); color: white; cursor: pointer; font-weight: 800; letter-spacing: .03em; box-shadow: 0 10px 22px rgba(23,38,58,.18); }
+    .copy-btn:active { transform: translateY(1px); }
+    .copy-status { min-height: 22px; margin: 8px 0 0; text-align: center; color: #6b756f; font-size: .82rem; }
+
+    .note { margin-top: 18px; padding: 18px 4px 0; border-top: 1px solid rgba(244,240,232,.16); color: rgba(244,240,232,.64); font-size: .78rem; line-height: 1.75; }
+    .note strong { color: var(--gold-soft); }
+
+    @media (max-width: 820px) {
+      .shell { padding: 18px 14px 48px; }
+      .workspace { grid-template-columns: 1fr; }
+      .intro { margin-top: 26px; }
+      .intro p { font-size: .94rem; }
+      .panel { border-radius: 20px; }
+      .inputs, .results { padding: 20px 16px; }
+      .task-grid { grid-template-columns: 1fr; }
+      .task-card { min-height: 0; display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; align-items: center; }
+      .task-card strong { margin: 0; grid-row: 1 / span 2; grid-column: 2; }
+      .task-card small { grid-column: 1; }
+      .privacy { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>睡得著的投資</span></div>
+      <div class="privacy">資料只在你的裝置上計算，不會儲存</div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">資產任務試算</p>
+      <h1 id="page-title">300萬可以怎麼分？</h1>
+      <p>先留下不能動的錢，再將可配置資產分成<span class="formula">10%跟著大盤、90%做配息</span>。看看每月可能增加多少非工資收入，以及能替生活分擔多少。</p>
+    </section>
+
+    <section class="workspace">
+      <form class="panel inputs" id="calculator" autocomplete="off">
+        <div class="panel-head"><div><span class="step">STEP 01</span><h2>填入你的生活狀況</h2></div></div>
+
+        <div class="field">
+          <div class="label-row"><label for="assets">目前可運用資產</label><span class="hint">不含自住房</span></div>
+          <div class="money-input"><input id="assets" name="assets" type="number" inputmode="decimal" min="0" step="10" value="300" /><span class="unit">萬元</span></div>
+        </div>
+
+        <div class="field">
+          <div class="label-row"><label for="expenses">每月必要生活支出</label><span class="hint">房租、貸款、生活費</span></div>
+          <div class="money-input"><input id="expenses" name="expenses" type="number" inputmode="decimal" min="0" step="0.5" value="4" /><span class="unit">萬元</span></div>
+        </div>
+
+        <div class="field">
+          <div class="label-row"><label>想保留幾個月預備金</label><span class="hint" id="monthsText">6個月</span></div>
+          <div class="months" role="group" aria-label="預備金月數">
+            <button class="month-btn" type="button" data-months="0" aria-pressed="false">0</button>
+            <button class="month-btn" type="button" data-months="3" aria-pressed="false">3</button>
+            <button class="month-btn" type="button" data-months="6" aria-pressed="true">6</button>
+            <button class="month-btn" type="button" data-months="9" aria-pressed="false">9</button>
+            <button class="month-btn" type="button" data-months="12" aria-pressed="false">12</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label-row"><label for="planned">三年內預計大額支出</label><span class="hint">買房、買車、還貸款</span></div>
+          <div class="money-input"><input id="planned" name="planned" type="number" inputmode="decimal" min="0" step="10" value="0" /><span class="unit">萬元</span></div>
+        </div>
+
+        <div class="field">
+          <div class="label-row"><label for="goal">希望每月增加</label><span class="hint">你的目標</span></div>
+          <div class="money-input"><input id="goal" name="goal" type="number" inputmode="decimal" min="0" step="0.1" value="2" /><span class="unit">萬元</span></div>
+        </div>
+      </form>
+
+      <section class="panel results" aria-live="polite">
+        <div class="panel-head"><div><span class="step">STEP 02</span><h2>你的資產任務分配</h2></div><span class="hint">假設配息率 8%</span></div>
+
+        <div class="allocation-visual" aria-label="資產任務比例圖">
+          <div class="bar"><span class="bar-reserve" id="reserveBar"></span><span class="bar-market" id="marketBar"></span><span class="bar-income" id="incomeBar"></span></div>
+          <div class="legend"><span style="--dot: var(--sage)">保留資金</span><span style="--dot: var(--gold)">10%大盤部位</span><span style="--dot: var(--navy)">90%配息配置</span></div>
+        </div>
+
+        <div class="task-grid">
+          <article class="task-card"><span class="tag">先保留</span><strong id="reserveValue">24萬</strong><small>預備金與近期用途</small></article>
+          <article class="task-card"><span class="tag">跟著大盤</span><strong id="marketValue">27.6萬</strong><small>可配置資產的10%</small></article>
+          <article class="task-card primary"><span class="tag">配息配置</span><strong id="incomeValue">248.4萬</strong><small>可配置資產的90%</small></article>
+        </div>
+
+        <div class="hero-result">
+          <span>每月可能增加</span>
+          <strong id="monthlyValue">NT$ 16,560</strong>
+          <small>非工資收入試算</small>
+        </div>
+
+        <div class="coverage">
+          <div class="coverage-top"><span>可分擔生活開銷</span><strong id="coverageValue">41%</strong></div>
+          <div class="progress"><span id="coverageBar"></span></div>
+        </div>
+
+        <div class="goal" id="goalCard">
+          <h3>距離你的目標</h3>
+          <p id="goalText">每月還差約3,440元；若維持10／90比例，約需再增加57.3萬元可配置資產。</p>
+        </div>
+
+        <button class="copy-btn" id="copyResult" type="button">複製我的試算結果</button>
+        <p class="copy-status" id="copyStatus" role="status"></p>
+      </section>
+    </section>
+
+    <footer class="note">
+      <strong>這只是第一步試算。</strong><br />
+      本工具以可運用資產扣除預備金及近期用途後，將剩餘資產假設分為10%大盤部位、90%配息配置，並以假設年化配息率8%換算。試算不代表投資報酬或配息保證，實際配置應依個人收支、保障、資金用途及風險承受度評估。
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const RATE = 0.08;
+      const MARKET_RATIO = 0.10;
+      const INCOME_RATIO = 0.90;
+      let reserveMonths = 6;
+
+      const $ = (id) => document.getElementById(id);
+      const inputs = [$("assets"), $("expenses"), $("planned"), $("goal")];
+      const number = (value) => Math.max(0, Number.parseFloat(value) || 0);
+      const moneyWan = (value) => `${value.toLocaleString("zh-TW", { maximumFractionDigits: 1 })}萬`;
+      const moneyTwd = (value) => `NT$ ${Math.round(value).toLocaleString("zh-TW")}`;
+
+      function calculate(values = {}) {
+        const assets = number(values.assets ?? $("assets").value);
+        const expenses = number(values.expenses ?? $("expenses").value);
+        const planned = number(values.planned ?? $("planned").value);
+        const goal = number(values.goal ?? $("goal").value);
+        const months = Number.isFinite(Number(values.reserveMonths)) ? Math.max(0, Number(values.reserveMonths)) : reserveMonths;
+        const emergency = expenses * months;
+        const reserve = Math.min(assets, emergency + planned);
+        const allocatable = Math.max(0, assets - reserve);
+        const market = allocatable * MARKET_RATIO;
+        const income = allocatable * INCOME_RATIO;
+        const monthlyTwd = income * 10000 * RATE / 12;
+        const coverage = expenses > 0 ? monthlyTwd / (expenses * 10000) * 100 : 0;
+        const goalTwd = goal * 10000;
+        const gapTwd = Math.max(0, goalTwd - monthlyTwd);
+        const extraAssets = gapTwd > 0 ? gapTwd * 12 / (RATE * INCOME_RATIO) / 10000 : 0;
+        return { assets, expenses, planned, goal, months, emergency, reserve, allocatable, market, income, monthlyTwd, coverage, goalTwd, gapTwd, extraAssets };
+      }
+
+      function render(result = calculate()) {
+        const { assets, reserve, market, income, monthlyTwd, coverage, goalTwd, gapTwd, extraAssets, months } = result;
+        $("reserveValue").textContent = moneyWan(reserve);
+        $("marketValue").textContent = moneyWan(market);
+        $("incomeValue").textContent = moneyWan(income);
+        $("monthlyValue").textContent = moneyTwd(monthlyTwd);
+        $("coverageValue").textContent = `${Math.round(coverage)}%`;
+        $("coverageBar").style.width = `${Math.min(100, coverage)}%`;
+        $("monthsText").textContent = `${months}個月`;
+
+        const total = assets || 1;
+        $("reserveBar").style.width = `${reserve / total * 100}%`;
+        $("marketBar").style.width = `${market / total * 100}%`;
+        $("incomeBar").style.width = `${income / total * 100}%`;
+
+        const goalCard = $("goalCard");
+        if (goalTwd <= 0) {
+          goalCard.classList.remove("done");
+          $("goalText").textContent = "填入你希望每月增加的金額，就能看見距離目標還差多少。";
+        } else if (gapTwd > 1) {
+          goalCard.classList.remove("done");
+          $("goalText").innerHTML = `每月還差約<strong>${Math.round(gapTwd).toLocaleString("zh-TW")}元</strong>；若維持10／90比例，約需再增加<strong>${extraAssets.toLocaleString("zh-TW", { maximumFractionDigits: 1 })}萬元</strong>可配置資產。`;
+        } else {
+          goalCard.classList.add("done");
+          const over = Math.max(0, monthlyTwd - goalTwd);
+          $("goalText").innerHTML = `試算結果已達到你的目標${over > 1 ? `，每月約多出<strong>${Math.round(over).toLocaleString("zh-TW")}元</strong>` : ""}。仍要保留市場波動與配息變動的空間。`;
+        }
+      }
+
+      function update() { render(calculate()); }
+      inputs.forEach((input) => input.addEventListener("input", update));
+      document.querySelectorAll(".month-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          reserveMonths = Number(button.dataset.months);
+          document.querySelectorAll(".month-btn").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          update();
+        });
+      });
+
+      async function copyResult() {
+        const r = calculate();
+        const text = [
+          "我的資產任務試算結果",
+          `可運用資產：${moneyWan(r.assets)}`,
+          `保留資金：${moneyWan(r.reserve)}`,
+          `10%大盤部位：${moneyWan(r.market)}`,
+          `90%配息配置：${moneyWan(r.income)}`,
+          `每月非工資收入試算：約${Math.round(r.monthlyTwd).toLocaleString("zh-TW")}元`,
+          `可分擔生活開銷：約${Math.round(r.coverage)}%`,
+          "（以假設年化配息率8%計算，不代表投資報酬或配息保證）"
+        ].join("\n");
+        try {
+          await navigator.clipboard.writeText(text);
+          $("copyStatus").textContent = "已複製，可以回到IG把結果貼給我";
+        } catch {
+          $("copyStatus").textContent = "無法自動複製，請直接截圖這個結果";
+        }
+      }
+      $("copyResult").addEventListener("click", copyResult);
+
+      function registerWebMcp() {
+        const context = document.modelContext;
+        if (!context?.registerTool) return;
+        try {
+          void Promise.resolve(context.registerTool({
+            name: "calculate_asset_tasks",
+            title: "試算資產任務分配",
+            description: "依可運用資產、每月支出、預備金月數、近期支出與目標，計算保留資金、10%大盤部位、90%配息配置與每月非工資收入試算。",
+            inputSchema: {
+              type: "object",
+              properties: {
+                assets: { type: "number", minimum: 0, description: "可運用資產，單位為萬元" },
+                expenses: { type: "number", minimum: 0, description: "每月必要支出，單位為萬元" },
+                reserveMonths: { type: "number", enum: [0, 3, 6, 9, 12] },
+                planned: { type: "number", minimum: 0, description: "三年內大額支出，單位為萬元" },
+                goal: { type: "number", minimum: 0, description: "每月非工資收入目標，單位為萬元" }
+              },
+              required: ["assets", "expenses", "reserveMonths", "planned", "goal"],
+              additionalProperties: false
+            },
+            annotations: { readOnlyHint: true, untrustedContentHint: false },
+            execute(input) {
+              const values = input && typeof input === "object" ? input : {};
+              for (const key of ["assets", "expenses", "planned", "goal"]) {
+                if (typeof values[key] !== "number" || values[key] < 0) throw new Error(`${key} 必須是大於等於0的數字`);
+              }
+              if (![0, 3, 6, 9, 12].includes(values.reserveMonths)) throw new Error("reserveMonths 必須是0、3、6、9或12");
+              const result = calculate(values);
+              return {
+                reserveWan: Number(result.reserve.toFixed(1)),
+                marketWan: Number(result.market.toFixed(1)),
+                incomeAllocationWan: Number(result.income.toFixed(1)),
+                monthlyIncomeTwd: Math.round(result.monthlyTwd),
+                expenseCoveragePercent: Math.round(result.coverage),
+                goalGapTwd: Math.round(result.gapTwd),
+                additionalAssetsNeededWan: Number(result.extraAssets.toFixed(1)),
+                assumptions: { distributionRate: 0.08, marketRatio: 0.10, incomeRatio: 0.90 }
+              };
+            }
+          })).catch(() => {});
+        } catch {}
+      }
+
+      update();
+      registerWebMcp();
+    })();
+  </script>
+</body>
+</html>
