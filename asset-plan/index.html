@@ -177,11 +177,6 @@
         </div>
 
         <div class="field">
-          <div class="label-row"><label for="planned">三年內預計大額支出</label><span class="hint">買房、買車、還貸款</span></div>
-          <div class="money-input"><input id="planned" name="planned" type="number" inputmode="decimal" min="0" step="10" value="0" /><span class="unit">萬元</span></div>
-        </div>
-
-        <div class="field">
           <div class="label-row"><label for="goal">希望每月增加</label><span class="hint">你的目標</span></div>
           <div class="money-input"><input id="goal" name="goal" type="number" inputmode="decimal" min="0" step="0.1" value="2" /><span class="unit">萬元</span></div>
         </div>
@@ -196,7 +191,7 @@
         </div>
 
         <div class="task-grid">
-          <article class="task-card"><span class="tag">先保留</span><strong id="reserveValue">24萬</strong><small>預備金與近期用途</small></article>
+          <article class="task-card"><span class="tag">先保留</span><strong id="reserveValue">24萬</strong><small>緊急預備金</small></article>
           <article class="task-card"><span class="tag">跟著大盤</span><strong id="marketValue">27.6萬</strong><small>可配置資產的10%</small></article>
           <article class="task-card primary"><span class="tag">配息配置</span><strong id="incomeValue">248.4萬</strong><small>可配置資產的90%</small></article>
         </div>
@@ -224,7 +219,7 @@
 
     <footer class="note">
       <strong>這只是第一步試算。</strong><br />
-      本工具以可運用資產扣除預備金及近期用途後，將剩餘資產假設分為10%大盤部位、90%配息配置，並以假設年化配息率8%換算。試算不代表投資報酬或配息保證，實際配置應依個人收支、保障、資金用途及風險承受度評估。
+      本工具以可運用資產扣除預備金後，將剩餘資產假設分為10%大盤部位、90%配息配置，並以假設年化配息率8%換算。試算不代表投資報酬或配息保證，實際配置應依個人收支、保障、資金用途及風險承受度評估。
       <nav class="other-tools" aria-label="其他試算工具">
         <a href="../">退休準備試算</a>
         <a href="../property/">房產活化試算</a>
@@ -240,7 +235,7 @@
       let reserveMonths = 6;
 
       const $ = (id) => document.getElementById(id);
-      const inputs = [$("assets"), $("expenses"), $("planned"), $("goal")];
+      const inputs = [$("assets"), $("expenses"), $("goal")];
       const number = (value) => Math.max(0, Number.parseFloat(value) || 0);
       const moneyWan = (value) => `${value.toLocaleString("zh-TW", { maximumFractionDigits: 1 })}萬`;
       const moneyTwd = (value) => `NT$ ${Math.round(value).toLocaleString("zh-TW")}`;
@@ -248,11 +243,10 @@
       function calculate(values = {}) {
         const assets = number(values.assets ?? $("assets").value);
         const expenses = number(values.expenses ?? $("expenses").value);
-        const planned = number(values.planned ?? $("planned").value);
         const goal = number(values.goal ?? $("goal").value);
         const months = Number.isFinite(Number(values.reserveMonths)) ? Math.max(0, Number(values.reserveMonths)) : reserveMonths;
         const emergency = expenses * months;
-        const reserve = Math.min(assets, emergency + planned);
+        const reserve = Math.min(assets, emergency);
         const allocatable = Math.max(0, assets - reserve);
         const market = allocatable * MARKET_RATIO;
         const income = allocatable * INCOME_RATIO;
@@ -261,7 +255,7 @@
         const goalTwd = goal * 10000;
         const gapTwd = Math.max(0, goalTwd - monthlyTwd);
         const extraAssets = gapTwd > 0 ? gapTwd * 12 / (RATE * INCOME_RATIO) / 10000 : 0;
-        return { assets, expenses, planned, goal, months, emergency, reserve, allocatable, market, income, monthlyTwd, coverage, goalTwd, gapTwd, extraAssets };
+        return { assets, expenses, goal, months, emergency, reserve, allocatable, market, income, monthlyTwd, coverage, goalTwd, gapTwd, extraAssets };
       }
 
       function render(result = calculate()) {
@@ -331,23 +325,22 @@
           void Promise.resolve(context.registerTool({
             name: "calculate_asset_tasks",
             title: "試算資產任務分配",
-            description: "依可運用資產、每月支出、預備金月數、近期支出與目標，計算保留資金、10%大盤部位、90%配息配置與每月非工資收入試算。",
+            description: "依可運用資產、每月支出、預備金月數與目標，計算保留資金、10%大盤部位、90%配息配置與每月非工資收入試算。",
             inputSchema: {
               type: "object",
               properties: {
                 assets: { type: "number", minimum: 0, description: "可運用資產，單位為萬元" },
                 expenses: { type: "number", minimum: 0, description: "每月必要支出，單位為萬元" },
                 reserveMonths: { type: "number", enum: [0, 3, 6, 9, 12] },
-                planned: { type: "number", minimum: 0, description: "三年內大額支出，單位為萬元" },
                 goal: { type: "number", minimum: 0, description: "每月非工資收入目標，單位為萬元" }
               },
-              required: ["assets", "expenses", "reserveMonths", "planned", "goal"],
+              required: ["assets", "expenses", "reserveMonths", "goal"],
               additionalProperties: false
             },
             annotations: { readOnlyHint: true, untrustedContentHint: false },
             execute(input) {
               const values = input && typeof input === "object" ? input : {};
-              for (const key of ["assets", "expenses", "planned", "goal"]) {
+              for (const key of ["assets", "expenses", "goal"]) {
                 if (typeof values[key] !== "number" || values[key] < 0) throw new Error(`${key} 必須是大於等於0的數字`);
               }
               if (![0, 3, 6, 9, 12].includes(values.reserveMonths)) throw new Error("reserveMonths 必須是0、3、6、9或12");
